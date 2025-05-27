@@ -104,6 +104,7 @@ par(mfrow=c(1,1))
 # Margins are set in order bottom, left, top, right
 par(mar=c(0.5, 0.5, 0.5, 0.5), oma=c(4, 0, 0, 0), mgp=c(3, 1, 0), las=1)
 
+# PANEL A
 # Graphical solution with tangent
 # We show, for a fixed c, how N(w), F(w), and D(w) behave.
 c_fixed <- 8
@@ -173,6 +174,7 @@ legend("topleft"
        , cex = 1.2
        , bg="transparent"
 )
+
 
 # Fig. 2 Different behaviors of N --------------------------------
 
@@ -795,5 +797,7 @@ text(optimalp*1.1, optimalY*1.25, adj=0, paste("Optimal p*=", round(optimalp, 2)
 text(0, 0.98*Flim_B, "b", cex=2, adj=c(0,0))
 
   
+
+
 
 

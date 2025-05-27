@@ -8,32 +8,7 @@
 
 ### Contents ------------------
 # I Models A.1, A.2, A.3
-
-# Attraction vs choice
-# 3x3 Fig
-# columns: three models, x-axis w
-# rows: 
-# 1 - N, bees on c and bees on w as former fig 1.b
-#     parameters symmetric on c and w.
-#     include vertical line for optimum and horizontal line
-#     for Nc
-#     describe similarity to Fig1 and Fig2
-# 2 - as 1d: differences caused by other plant
-# 3 - Bees per amount for c and w (as 1f+g)
-
-# Effects of parameters
-# w* ~ parameter(3*cont) * D(cont) * model(3)
-# Fig A x-axis D, y-axis w*, 3 columns = 3 models
-# 3 rows: Aw, aw, ac in colors, M and qa, qc for model A.3
-
-# F/Nc ~ parameter(3*cont) * D(cont) * model(3)
-# Fig B x-axis D, y-axis F/Nc, 3 columns = 3 models
-# 3 rows: Aw, aw, ac in colors, M and qa, qc for model A.3
-
 # II Model B
-# leave as is or make similar to above?
-
-
 
 ### Libraries and graphics setup ------------------
 # Libraries purely for graphics
@@ -51,10 +26,8 @@ colorlist <- c(templist1[2], templist1[3], templist1[4], templist1[5], templist2
 no_states <- 5
 par_colors_dark <- viridis(no_states)
 par_colors <- alpha(par_colors_dark, 0.5)
-N_colors <- mako(no_states+2)[-1]
-N_colors <- N_colors[-length(N_colors)]
-F_colors <- magma(no_states+2)[-1]
-F_colors <- F_colors[-length(F_colors)]
+N_colors <- mako(no_states, begin = 0.3, end = 0.9)
+F_colors <- magma(no_states, begin = 0.3, end = 0.9)
 
 #dev.off()
 opar <- par()
@@ -82,9 +55,11 @@ c_list <- w_list
 ## Parameter variations
 # no_states needs to be defined before colors
 c_states <- round(seq(1, 20, length.out=no_states), 1)
+w_states <- c_states
 aw_list <- round(seq(0.01,1, length.out=no_states), 2) 
 ac_list <- round(seq(0.01,1, length.out=no_states), 2) 
-expon <- seq(-1.5, 1.5, length.out=no_states)
+range_param <- 1
+expon <- seq(-range_param, range_param, length.out=no_states)
 AAw_list <- round(10^expon, 2)
 AAc_list <- round(10^expon, 2) 
 
@@ -446,10 +421,10 @@ mtext(text = "Fraction of pollinators in patch on crop: D = c/(c+w)",
 
 ### FIG S2 PARAMETERS ON D, and w* 3x3 ------------------------
 # x-axis D, y-axis N, 3 columns = 3 models
-# 4 rows: c, Aw, aw, ac in colors; M and qa, qc for model A.3
+# 4 rows: c, Aw, aw, ac in colors
 # Figure format ---------------------
 pointsize <- 0.6
-Nlim <- 30 # Max for N graph
+Nlim <- 20 # Max for N graph
 F_clim <- Nlim / 10 # Max for F/c graph
 wlim <- 20 # for plotting
 clim <- 50 # Max c for graph
@@ -512,6 +487,7 @@ for (i in 1:no_states) { # over parameter values
   )
   abline(v=D(c_states[i], w_opt_figS2[i]), lty = opt_w_lines, lwd=2, col=F_colors[i])
 }
+
 text(D(c_states[1], w_opt_figS2[1])-0.015, Nlim*0.7
        , paste("w*=", round(w_opt_figS2[1], 1))
        , cex=1, col="black", pos=2, xpd=NA
@@ -586,9 +562,10 @@ for (i in 1:no_states) { # over parameter values
   )
   abline(v=D(c_fixed, w_opt_figS2[i]), lty = opt_w_lines, lwd=2, col=F_colors[i])
 }
+
 # Letter label for this panel
 text(offsetx, Nlim*offsety, "d", cex=2, col = "black")
-text(D(c_fixed, w_opt_figS2[no_states])-0.015, Nlim*0.9
+text(D(c_fixed, w_opt_figS2[no_states])-0.015, Nlim*0.8
      , paste("w*=", round(w_opt_figS2[no_states], 1))
      , cex=1, col="black", pos=2, xpd=NA
 )
@@ -803,16 +780,16 @@ for (i in 1:no_states) { # over parameter values
   )
   abline(v=D(c_states[i], w_opt_figS2[i]), lty = opt_w_lines, lwd=2, col=F_colors[i])
 }
-text(D(c_states[1], w_opt_figS2[1])-0.5, Nlim*0.7
+text(D(c_states[1], w_opt_figS2[1])-0.3, Nlim*0.1
      , paste("w*=", round(w_opt_figS2[1], 1))
-     , cex=1, col="black", pos=4, xpd=NA
+     , cex=1, col=F_colors[1], pos=4, xpd=NA
 )
-text(D(c_states[no_states], w_opt_figS2[no_states])+0.13, Nlim*0.8
+text(D(c_states[no_states], w_opt_figS2[no_states])+0.06, Nlim*0.1
      , paste("w*=", round(w_opt_figS2[no_states], 1))
-     , cex=1, col="black", pos=4, xpd=NA
+     , cex=1, col=F_colors[no_states], pos=4, xpd=NA
 )
 # Letter label for this panel
-text(offsetx+0.1, Nlim*offsety, "b", cex=2, col = "black")
+text(offsetx, Nlim*offsety, "b", cex=2, col = "black")
 mtext(text = "Model A.2", 
       side = 3, line = 0, las=1, cex=1, xpd=TRUE)
 
@@ -853,7 +830,7 @@ for (i in 1:no_states) { # over parameter values
   )
   abline(v=D(c_fixed, w_opt_figS2[i]), lty = opt_w_lines, lwd=2, col=F_colors[i])
 }
-text(D(c_fixed, w_opt_figS2[no_states])-0.015, Nlim*0.6
+text(D(c_fixed, w_opt_figS2[no_states])-0.015, Nlim*0.8
      , paste("w*=", round(w_opt_figS2[no_states], 1))
      , cex=1, col="black", pos=2, xpd=NA
 )
@@ -940,7 +917,7 @@ text(D(c_fixed, w_opt_figS2[1])-0.015, Nlim*0.2
      , paste("w*=", round(w_opt_figS2[1], 1))
      , cex=1, col="black", pos=2, xpd=NA
 )
-text(D(c_fixed, w_opt_figS2[no_states])+0.015, Nlim*0.8
+text(D(c_fixed, w_opt_figS2[no_states])+0.015, Nlim*0.2
      , paste("w*=", round(w_opt_figS2[no_states], 1))
      , cex=1, col="black", pos=4, xpd=NA
 )
@@ -1036,6 +1013,10 @@ for (i in 1:no_states) { # over parameter values
   )
   abline(v=D(c_fixed, w_opt_figS2[i]), lty = opt_w_lines, lwd=2, col=F_colors[i])
 }
+text(D(c_fixed, w_opt_figS2[no_states])-0.25, Nlim*0.8
+     , paste("w*=", round(w_opt_figS2[no_states], 1))
+     , cex=1, col="black", pos=4, xpd=NA
+)
 # Letter label for this panel
 text(offsetx, Nlim*offsety, "f", cex=2, col = "black")
 
@@ -1134,11 +1115,11 @@ text(offsetx, Nlim*offsety, "l", cex=2, col = "black")
 mtext(text = "Fraction of pollinators in patch on crop: D = c/(c+w)", 
       side = 1, line = 2, las=1, cex=0.8, outer=TRUE)
 # Y-Axis label ----------------------------
-# Text in outer margin for overarching x-axis label
+# Text in outer margin for overarching y-axis label
 #mtext(text = "Total bees in patch N", 
 #      side = 2, line = 2, las=3, cex=0.8, outer=TRUE)
-
 ### END FIG S2 --------------------------
+
 
 
 
@@ -1606,789 +1587,6 @@ mtext(text = p_star_vals,
 
 ## ALTERNATIVE FIGURES
 
-### FIG S1alt(alternative) ATTRACTION VS CHOICE OVER w- 3X3 ------------------------
-# Figure format NOTE PANEL LABELS NOT ADJUSTED -------------------------------
-## For plotting
-pointsize <- 0.6
-Nlim <- 25 # Max for N graph
-F_clim <- Nlim / 10 # Max for F/c graph
-wlim <- 20 # for plotting
-clim <- 50 # Max c for graph
-offsetx <- 0.02
-offsety <- 0.95
-point_transparency <- 0.5
-
-# Make 3x3 panels
-par(mfrow=c(3,3))
-# Various other format adjustments (margins in order bottom, left, top, right)
-par(oma = c(5,5,1,0), mar=c(0.5, 0.5, 0.5, 0.5), mgp=c(3, 1, 0), las=1)
-
-# 1st ROW - Number of bees, F, Nc, w* -----------------
-
-# ROW 1: Number of bees: N, Fc, Fw=N-Fc, Nc
-# column 1: Model A1
-plot(NULL
-     , ylim= c(0, Nlim)
-     , xlim= c(0, wlim)
-     , xaxt= 'n'
-)
-# Fc filled area
-polygon(c(w_list, rev(w_list)), c(c(1:resolution)*0, rev(Fs_A1))
-        , col = alpha(colorlist[2], point_transparency)
-        , lty = 0
-)
-# Fw = area between Fc and N
-polygon(c(w_list, rev(w_list)), c(Fs_A1, rev(Ns_A1))
-        , col = colorlist[5]
-        , lty = 0
-)
-# horizontal line at Nc
-abline(h=N_A1(c_fixed, 0), lty=2, lwd=3, col=colorlist[3])
-# Cross of lines at w*
-abline(h=max(Fs_A1), lwd=2, lty=3, col="grey")
-abline(v=w_list[which(Fs_A1==max(Fs_A1))], lwd=2, lty=3, col="grey")
-# Fc points to emphasize line
-points(Fs_A1 ~ w_list
-       , col= alpha(colorlist[2], point_transparency)
-       , pch = 19
-)
-# N points to emphasize line
-points(Ns_A1 ~ w_list
-       , col= alpha(colorlist[1], point_transparency)
-       , pch = 19
-)
-# Letter label for this panel
-text(wlim*offsetx, Nlim*offsety, "a", cex=2)
-# Text in local margin for this row's y-axis label
-mtext(text = "Number of bees", 
-      side = 2, line = 3, las=3, cex=0.8)
-legend("topright"
-       , legend = c("N (total bees)", "N-F (bees on w)", "F (bees on c)", "Nc (bees on c at w=0")
-       , col = c(colorlist[1], colorlist[5], colorlist[2], colorlist[3])
-       , pch = 19
-       , cex = 0.9
-       , pt.cex = 2
-       #, bg="transparent"
-       
-)
-# ROW 1: Number of bees: N, Fc, Fw=N-Fc, Nc
-# column 2: Model A2
-plot(NULL
-     , ylim= c(0, Nlim)
-     , xlim= c(0, wlim)
-     , xaxt= 'n'
-     , yaxt= 'n'
-)
-# Fc filled area
-polygon(c(w_list, rev(w_list)), c(c(1:resolution)*0, rev(Fs_A2))
-        , col = alpha(colorlist[2], point_transparency)
-        , lty = 0
-)
-# Fw = area between Fc and N
-polygon(c(w_list, rev(w_list)), c(Fs_A2, rev(Ns_A2))
-        , col = colorlist[5]
-        , lty = 0
-)
-# Letter label for this panel
-text(wlim*offsetx, Nlim*offsety, "b", cex=2)
-# horizontal line at Nc
-abline(h=N_A2(c_fixed, 0), lty=2, lwd=3, col=colorlist[3])
-# Cross of lines at w*
-abline(h=max(Fs_A2), lwd=2, lty=3, col="grey")
-abline(v=w_list[which(Fs_A2==max(Fs_A2))], lwd=2, lty=3, col="grey")
-# Fc points to emphasize line
-points(Fs_A2 ~ w_list
-       , col= alpha(colorlist[2], point_transparency)
-       , pch = 19
-)
-# N points to emphasize line
-points(Ns_A2 ~ w_list
-       , col= alpha(colorlist[1], point_transparency)
-       , pch = 19
-)
-
-# ROW 1: Number of bees: N, Fc, Fw=N-Fc, Nc
-# column 3: Model A3
-plot(NULL
-     , ylim= c(0, Nlim)
-     , xlim= c(0, wlim)
-     , xaxt= 'n'
-     , yaxt= 'n'
-)
-# Fc filled area
-polygon(c(w_list, rev(w_list)), c(c(1:resolution)*0, rev(Fs_A3))
-        , col = alpha(colorlist[2], point_transparency)
-        , lty = 0
-)
-# Fw = area between Fc and N
-polygon(c(w_list, rev(w_list)), c(Fs_A3, rev(Ns_A3))
-        , col = colorlist[5]
-        , lty = 0
-)
-# Letter label for this panel
-text(wlim*offsetx, Nlim*offsety, "c", cex=2)
-# horizontal line at Nc
-abline(h=N_A3(c_fixed, 0), lty=2, lwd=3, col=colorlist[3])
-# Cross of lines at w*
-abline(h=max(Fs_A3), lwd=2, lty=3, col="grey")
-abline(v=w_list[which(Fs_A3==max(Fs_A3))], lwd=2, lty=3, col="grey")
-# Fc points to emphasize line
-points(Fs_A3 ~ w_list
-       , col= alpha(colorlist[2], point_transparency)
-       , pch = 19
-)
-# N points to emphasize line
-points(Ns_A3 ~ w_list
-       , col= alpha(colorlist[1], point_transparency)
-       , pch = 19
-)
-
-
-# 2nd ROW - Differences caused by other species -----------------
-# ROW 2: Fc-Nc (gain for c from w), Fw-N(0,w) (gain for w from c)
-# column 1: Model A1
-plot(NULL
-     , ylim= c(-Nlim, Nlim)
-     , xlim= c(0, wlim)
-     , xaxt= 'n'
-)
-# horizontal line at 0
-abline(h=0, lwd=2, lty=2, col="grey")
-# vertical lines at w*
-abline(v=w_list[which(Fs_A1==max(Fs_A1))], lwd=2, lty=3, col="grey")
-# Fc-Nc (gain for c from w)
-points(Fs_A1-N_A1(c_fixed,0) ~ w_list
-       , col= alpha(colorlist[2], point_transparency)
-       , pch = 19
-)
-# Fw-N(0,w) (gain for w from c)
-points((Ns_A1-Fs_A1)-N_A1(0,w_list) ~ w_list
-       , col= alpha(colorlist[5], point_transparency)
-       , pch = 19
-)
-# Letter label for this panel
-text(wlim*offsetx, Nlim*(offsety*2), "c", cex=2)
-# Text in local margin for this row's y-axis label
-mtext(text = "Bees gained/lost", 
-      side = 2, line = 3, las=3, cex=0.8)
-
-# ROW 2: Fc-Nc (gain for c from w), Fw-N(0,w) (gain for w from c)
-# column 2: Model A2
-plot(NULL
-     , ylim= c(-Nlim, Nlim)
-     , xlim= c(0, wlim)
-     , xaxt= 'n'
-     , yaxt= 'n'
-)
-# horizontal line at 0
-abline(h=0, lwd=2, lty=2, col="grey")
-# vertical lines at w*
-abline(v=w_list[which(Fs_A2==max(Fs_A2))], lwd=2, lty=3, col="grey")
-# Fc-Nc (gain for c from w)
-points(Fs_A2-N_A2(c_fixed,0) ~ w_list
-       , col= alpha(colorlist[2], point_transparency)
-       , pch = 19
-)
-# Fw-N(0,w) (gain for w from c)
-points((Ns_A2-Fs_A2)-N_A2(0,w_list) ~ w_list
-       , col= alpha(colorlist[5], point_transparency)
-       , pch = 19
-)
-# Letter label for this panel
-text(wlim*offsetx, Nlim*(offsety*2), "d", cex=2)
-
-# ROW 2: Fc-Nc (gain for c from w), Fw-N(0,w) (gain for w from c)
-# column 3: Model A3
-plot(NULL
-     , ylim= c(-Nlim, Nlim)
-     , xlim= c(0, wlim)
-     , xaxt= 'n'
-     , yaxt= 'n'
-)
-# horizontal line at 0
-abline(h=0, lwd=2, lty=2, col="grey")
-# vertical lines at w*
-abline(v=w_list[which(Fs_A3==max(Fs_A3))], lwd=2, lty=3, col="grey")
-# Fc-Nc (gain for c from w)
-points(Fs_A3-N_A3(c_fixed,0) ~ w_list
-       , col= alpha(colorlist[2], point_transparency)
-       , pch = 19
-)
-# Fw-N(0,w) (gain for w from c)
-points((Ns_A3-Fs_A3)-N_A3(0,w_list) ~ w_list
-       , col= alpha(colorlist[5], point_transparency)
-       , pch = 19
-)
-# Letter label for this panel
-text(wlim*offsetx, Nlim*(offsety*2), "e", cex=2)
-legend("topright"
-       , legend = c("Fw-N(0,w) (bees gained by w because of c)", "F-Nc (bees gained by c because of w)")
-       , col = c(colorlist[5], colorlist[2])
-       , pch = 19
-       , cex = 0.8
-       , pt.cex = 2
-       #, bg="transparent"
-       
-)
-
-# 3rd ROW - Bees per amount of c and w ---------------
-# ROW 3: Fc/c and Fw/w
-# column 1: Model A.1
-plot(NULL
-     , ylim= c(0, F_clim)
-     , xlim= c(0, wlim)
-)
-# vertical lines at w*
-abline(v=w_list[which(Fs_A1==max(Fs_A1))], lwd=2, lty=3, col="grey")
-# Fc/c 
-points(Fs_A1/c_fixed ~ w_list
-       , col= alpha(colorlist[2], point_transparency)
-       , pch = 19
-)
-# Fw/w
-points((Ns_A1-Fs_A1)/w_list ~ w_list
-       , col= alpha(colorlist[5], point_transparency)
-       , pch = 19
-)
-# Letter label for this panel
-text(wlim*offsetx, Nlim*offsety, "g", cex=2)
-# Text in local margin for this row's y-axis label
-mtext(text = "Bees per value of flowers", 
-      side = 2, line = 3, las=3, cex=0.8)
-#legend("topright"
-#       , legend = c("Fw/w", "Fc/c")
-#       , col = c(colorlist[5], colorlist[2])
-#       , pch = 19
-#       , cex = 0.9
-#       , pt.cex = 2
-#       #, bg="transparent"
-#)
-
-# ROW 3: Fc/c and Fw/w
-# column 2: Model A2
-plot(NULL
-     , ylim= c(0, F_clim)
-     , xlim= c(0, wlim)
-     , yaxt= 'n'
-)
-# vertical lines at w*
-abline(v=w_list[which(Fs_A2==max(Fs_A2))], lwd=2, lty=3, col="grey")
-# Fc/c 
-points(Fs_A2/c_fixed ~ w_list
-       , col= alpha(colorlist[2], point_transparency)
-       , pch = 19
-)
-# Fw/w
-points((Ns_A2-Fs_A2)/w_list ~ w_list
-       , col= alpha(colorlist[5], point_transparency)
-       , pch = 19
-)
-# Letter label for this panel
-text(wlim*offsetx, Nlim*offsety, "h", cex=2)
-
-# ROW 3: Fc/c and Fw/w
-# column 3: Model A3
-plot(NULL
-     , ylim= c(0, F_clim)
-     , xlim= c(0, wlim)
-     , yaxt= 'n'
-)
-# vertical lines at w*
-abline(v=w_list[which(Fs_A3==max(Fs_A3))], lwd=2, lty=3, col="grey")
-# Fc/c 
-points(Fs_A3/c_fixed ~ w_list
-       , col= alpha(colorlist[2], point_transparency)
-       , pch = 19
-)
-# Fw/w
-points((Ns_A3-Fs_A3)/w_list ~ w_list
-       , col= alpha(colorlist[5], point_transparency)
-       , pch = 19
-)
-# Letter label for this panel
-text(wlim*offsetx, Nlim*offsety, "i", cex=2)
-
-# X-Axis label ----------------------------
-# Text in outer margin for overarching x-axis label
-mtext(text = "w (amount of wildflowers)", 
-      side = 1, line = 3, las=1, cex=0.8, outer=TRUE)
-
-### End Fig S1alt ----------------------
-
-
-### FIG S2alt PARAMETERS ON D, and w* 3x3 ------------------------
-# x-axis D, y-axis F, 3 columns = 3 models
-# 4 rows: c, Aw, aw, ac in colors; M and qa, qc for model A.3
-# Figure format ---------------------
-pointsize <- 0.6
-Nlim <- 25 # Max for N graph
-F_clim <- Nlim / 10 # Max for F/c graph
-wlim <- 20 # for plotting
-clim <- 50 # Max c for graph
-offsetx <- 0.08
-offsety <- 0.9
-point_transparency <- 0.5
-
-# Make 3x4 panels
-par(mfcol=c(4,3))
-# Various other format adjustments (margins in order bottom, left, top, right)
-par(oma = c(4,4,0,0), mar=c(0.5, 0.5, 0.5, 0.5), mgp=c(3, 1, 0), las=1)
-# Parameters --------------------
-default_c <- c_fixed
-default_AAw <- AAw
-default_aw <- aw
-default_ac <- ac
-linewidth <- 4
-linetransp <- 0.8
-
-# 1st COLUMN Model A1 --------------------
-# PANEL A: A.1, varying over c -------------------
-# Initialize 2-d arrays
-# Each is a list over w, but with rows being parameter state
-N_figS2 <- array(NaN, c(no_states, resolution))
-F_figS2 <- array(NaN, c(no_states, resolution))
-Nc_figS2 <- array(NaN, c(no_states, resolution))
-w_opt_figS2 <- array(NaN, c(no_states))
-
-for (i in 1:no_states) { # over parameter values
-  c_fixed <- c_states[i]
-  D_over_w <- D(c_fixed, w_list)
-  N_figS2[i,] <- N_A1(c_fixed,w_list)
-  F_figS2[i,] <- F(N_figS2[i,], D_over_w)
-  Nc_figS2[i,] <- N_A1(c_fixed,rep(0, resolution))
-  w_opt_figS2[i] <- w_list[which(F_figS2[i,]==max(F_figS2[i,]))]
-}
-c_fixed <- default_c
-D_over_w <- D(c_fixed, w_list)
-
-plot(NULL
-     , ylim= c(0, Nlim)
-     , xlim= c(0, 1)
-     , xaxt= 'n'
-)
-for (i in 1:no_states) { # over parameter values
-  lines(F_figS2[i,]~D(c_states[i], w_list)
-        , col = par_colors[i]
-        , lwd = linewidth
-  )
-  abline(v=D(c_states[i], w_opt_figS2[i]), lty = 2, lwd=2, col=par_colors_dark[i])
-}
-# Letter label for this panel
-text(0.5, Nlim*offsety, "a", cex=2, col = "black")
-legend("topleft"
-       , legend = paste("c=", c_states)
-       , col = par_colors_dark
-       , pch = 19
-       , cex = 0.9
-       , pt.cex = 2
-       , bty = 'n'
-       , bg= "transparent"
-)
-# PANEL D: A.1, varying over AAw -------------------
-
-# Initialize 2-d arrays
-# Each is a list over w, but with rows being parameter state
-N_figS2 <- array(NaN, c(no_states, resolution))
-F_figS2 <- array(NaN, c(no_states, resolution))
-Nc_figS2 <- array(NaN, c(no_states, resolution))
-w_opt_figS2 <- array(NaN, c(no_states))
-
-for (i in 1:no_states) { # over parameter values
-  AAw <- AAw_list[i]
-  N_figS2[i,] <- N_A1(c_fixed,w_list)
-  F_figS2[i,] <- F(N_figS2[i,], D_over_w)
-  Nc_figS2[i,] <- N_A1(c_fixed,rep(0, resolution))
-  w_opt_figS2[i] <- w_list[which(F_figS2[i,]==max(F_figS2[i,]))]
-}
-AAw <- default_AAw
-
-plot(NULL
-     , ylim= c(0, Nlim)
-     , xlim= c(0, 1)
-     , xaxt= 'n'
-)
-for (i in 1:no_states) { # over parameter values
-  lines(F_figS2[i,]~D_over_w
-        , col = par_colors[i]
-        , lwd = linewidth
-  )
-  abline(v=D(c_fixed, w_opt_figS2[i]), lty = 2, lwd=2, col=par_colors_dark[i])
-}
-# Letter label for this panel
-text(offsetx, Nlim*offsety, "d", cex=2, col = "black")
-legend("top"
-       , legend = paste("A=", AAw_list)
-       , col = par_colors_dark
-       , pch = 19
-       , cex = 0.9
-       , pt.cex = 2
-       , bty = 'n'
-       , bg= "transparent"
-)
-# PANEL G: A.1, varying over aw -------------------
-
-# Initialize 2-d arrays
-# Each is a list over w, but with rows being parameter state
-N_figS2 <- array(NaN, c(no_states, resolution))
-F_figS2 <- array(NaN, c(no_states, resolution))
-Nc_figS2 <- array(NaN, c(no_states, resolution))
-w_opt_figS2 <- array(NaN, c(no_states))
-
-for (i in 1:no_states) { # over parameter values
-  aw <- aw_list[i]
-  N_figS2[i,] <- N_A1(c_fixed,w_list)
-  F_figS2[i,] <- F(N_figS2[i,], D_over_w)
-  Nc_figS2[i,] <- N_A1(c_fixed,rep(0, resolution))
-  w_opt_figS2[i] <- w_list[which(F_figS2[i,]==max(F_figS2[i,]))]
-}
-aw <- default_aw
-
-plot(NULL
-     , ylim= c(0, Nlim)
-     , xlim= c(0, 1)
-     , xaxt= 'n'
-)
-for (i in 1:no_states) { # over parameter values
-  lines(F_figS2[i,]~D_over_w
-        , col = par_colors[i]
-        , lwd = linewidth
-  )
-  abline(v=D(c_fixed, w_opt_figS2[i]), lty = 2, lwd=2, col=par_colors[i])
-}
-# Letter label for this panel
-text(0.5, Nlim*offsety, "g", cex=2, col = "black")
-legend("topleft"
-       , legend = paste("aw=", aw_list)
-       , col = par_colors_dark
-       , pch = 19
-       , cex = 0.9
-       , pt.cex = 2
-       , bty = 'n'
-       , bg= "transparent"
-)
-# PANEL J: A.1, varying over ac -------------------
-
-# Initialize 2-d arrays
-# Each is a list over w, but with rows being parameter state
-N_figS2 <- array(NaN, c(no_states, resolution))
-F_figS2 <- array(NaN, c(no_states, resolution))
-Nc_figS2 <- array(NaN, c(no_states, resolution))
-w_opt_figS2 <- array(NaN, c(no_states))
-
-for (i in 1:no_states) { # over parameter values
-  ac <- ac_list[i]
-  N_figS2[i,] <- N_A1(c_fixed,w_list)
-  F_figS2[i,] <- F(N_figS2[i,], D_over_w)
-  Nc_figS2[i,] <- N_A1(c_fixed,rep(0, resolution))
-  w_opt_figS2[i] <- w_list[which(F_figS2[i,]==max(F_figS2[i,]))]
-}
-ac <- default_ac
-
-plot(NULL
-     , ylim= c(0, Nlim)
-     , xlim= c(0, 1)
-)
-for (i in 1:no_states) { # over parameter values
-  lines(F_figS2[i,]~D_over_w
-        , col = par_colors[i]
-        , lwd = linewidth
-  )
-  abline(v=D(c_fixed, w_opt_figS2[i]), lty = 2, lwd=2, col=par_colors[i])
-}
-# Letter label for this panel
-text(0.5, Nlim*offsety, "j", cex=2, col = "black")
-legend("topleft"
-       , legend = paste("ac=", ac_list)
-       , col = par_colors_dark
-       , pch = 19
-       , cex = 0.9
-       , pt.cex = 2
-       , bty = 'n'
-       , bg= "transparent"
-)
-# 2nd COLUMN Model A2 --------------------
-# PANEL B: A.2, varying over c -------------------
-# Initialize 2-d arrays
-# Each is a list over w, but with rows being parameter state
-N_figS2 <- array(NaN, c(no_states, resolution))
-F_figS2 <- array(NaN, c(no_states, resolution))
-Nc_figS2 <- array(NaN, c(no_states, resolution))
-w_opt_figS2 <- array(NaN, c(no_states))
-
-for (i in 1:no_states) { # over parameter values
-  c_fixed <- c_states[i]
-  D_over_w <- D(c_fixed, w_list)
-  N_figS2[i,] <- N_A2(c_fixed,w_list)
-  F_figS2[i,] <- F(N_figS2[i,], D_over_w)
-  Nc_figS2[i,] <- N_A2(c_fixed,rep(0, resolution))
-  w_opt_figS2[i] <- w_list[which(F_figS2[i,]==max(F_figS2[i,]))]
-}
-c_fixed <- default_c
-D_over_w <- D(c_fixed, w_list)
-
-plot(NULL
-     , ylim= c(0, Nlim)
-     , xlim= c(0, 1)
-     , xaxt= 'n'
-     , yaxt= 'n'
-)
-for (i in 1:no_states) { # over parameter values
-  lines(F_figS2[i,]~D(c_states[i], w_list)
-        , col = par_colors[i]
-        , lwd = linewidth
-  )
-  abline(v=D(c_states[i], w_opt_figS2[i]), lty = 2, lwd=2, col=par_colors_dark[i])
-}
-# Letter label for this panel
-text(offsetx, Nlim*offsety, "b", cex=2, col = "black")
-
-# PANEL E: A.2, varying over AAw -------------------
-
-# Initialize 2-d arrays
-# Each is a list over w, but with rows being parameter state
-N_figS2 <- array(NaN, c(no_states, resolution))
-F_figS2 <- array(NaN, c(no_states, resolution))
-Nc_figS2 <- array(NaN, c(no_states, resolution))
-w_opt_figS2 <- array(NaN, c(no_states))
-
-for (i in 1:no_states) { # over parameter values
-  AAw <- AAw_list[i]
-  N_figS2[i,] <- N_A2(c_fixed,w_list)
-  F_figS2[i,] <- F(N_figS2[i,], D_over_w)
-  Nc_figS2[i,] <- N_A2(c_fixed,rep(0, resolution))
-  w_opt_figS2[i] <- w_list[which(F_figS2[i,]==max(F_figS2[i,]))]
-}
-AAw <- default_AAw
-
-plot(NULL
-     , ylim= c(0, Nlim)
-     , xlim= c(0, 1)
-     , xaxt= 'n'
-     , yaxt= 'n'
-)
-for (i in 1:no_states) { # over parameter values
-  lines(F_figS2[i,]~D_over_w
-        , col = par_colors[i]
-        , lwd = linewidth
-  )
-  abline(v=D(c_fixed, w_opt_figS2[i]), lty = 2, lwd=2, col=par_colors_dark[i])
-}
-# Letter label for this panel
-text(offsetx, Nlim*offsety, "e", cex=2, col = "black")
-
-# PANEL H: A.2, varying over aw -------------------
-
-# Initialize 2-d arrays
-# Each is a list over w, but with rows being parameter state
-N_figS2 <- array(NaN, c(no_states, resolution))
-F_figS2 <- array(NaN, c(no_states, resolution))
-Nc_figS2 <- array(NaN, c(no_states, resolution))
-w_opt_figS2 <- array(NaN, c(no_states))
-
-for (i in 1:no_states) { # over parameter values
-  aw <- aw_list[i]
-  N_figS2[i,] <- N_A2(c_fixed,w_list)
-  F_figS2[i,] <- F(N_figS2[i,], D_over_w)
-  Nc_figS2[i,] <- N_A2(c_fixed,rep(0, resolution))
-  w_opt_figS2[i] <- w_list[which(F_figS2[i,]==max(F_figS2[i,]))]
-}
-aw <- default_aw
-
-plot(NULL
-     , ylim= c(0, Nlim)
-     , xlim= c(0, 1)
-     , yaxt= 'n'
-     , xaxt= 'n'
-)
-for (i in 1:no_states) { # over parameter values
-  lines(F_figS2[i,]~D_over_w
-        , col = par_colors[i]
-        , lwd = linewidth
-  )
-  abline(v=D(c_fixed, w_opt_figS2[i]), lty = 2, lwd=2, col=par_colors[i])
-}
-# Letter label for this panel
-text(offsetx, Nlim*offsety, "h", cex=2, col = "black")
-
-# PANEL K: A.2, varying over ac -------------------
-
-# Initialize 2-d arrays
-# Each is a list over w, but with rows being parameter state
-N_figS2 <- array(NaN, c(no_states, resolution))
-F_figS2 <- array(NaN, c(no_states, resolution))
-Nc_figS2 <- array(NaN, c(no_states, resolution))
-w_opt_figS2 <- array(NaN, c(no_states))
-
-for (i in 1:no_states) { # over parameter values
-  ac <- ac_list[i]
-  N_figS2[i,] <- N_A2(c_fixed,w_list)
-  F_figS2[i,] <- F(N_figS2[i,], D_over_w)
-  Nc_figS2[i,] <- N_A2(c_fixed,rep(0, resolution))
-  w_opt_figS2[i] <- w_list[which(F_figS2[i,]==max(F_figS2[i,]))]
-}
-ac <- default_ac
-
-plot(NULL
-     , ylim= c(0, Nlim)
-     , xlim= c(0, 1)
-     , yaxt= 'n'
-)
-for (i in 1:no_states) { # over parameter values
-  lines(F_figS2[i,]~D_over_w
-        , col = par_colors[i]
-        , lwd = linewidth
-  )
-  abline(v=D(c_fixed, w_opt_figS2[i]), lty = 2, lwd=2, col=par_colors[i])
-}
-# Letter label for this panel
-text(offsetx, Nlim*offsety, "k", cex=2, col = "black")
-
-# 3rd COLUMN Model A3 --------------------
-# PANEL C: A.3, varying over c -------------------
-# Initialize 2-d arrays
-# Each is a list over w, but with rows being parameter state
-N_figS2 <- array(NaN, c(no_states, resolution))
-F_figS2 <- array(NaN, c(no_states, resolution))
-Nc_figS2 <- array(NaN, c(no_states, resolution))
-w_opt_figS2 <- array(NaN, c(no_states))
-
-for (i in 1:no_states) { # over parameter values
-  c_fixed <- c_states[i]
-  D_over_w <- D(c_fixed, w_list)
-  N_figS2[i,] <- N_A3(c_fixed,w_list)
-  F_figS2[i,] <- F(N_figS2[i,], D_over_w)
-  Nc_figS2[i,] <- N_A3(c_fixed,rep(0, resolution))
-  w_opt_figS2[i] <- w_list[which(F_figS2[i,]==max(F_figS2[i,]))]
-}
-c_fixed <- default_c
-D_over_w <- D(c_fixed, w_list)
-
-plot(NULL
-     , ylim= c(0, Nlim)
-     , xlim= c(0, 1)
-     , xaxt= 'n'
-     , yaxt= 'n'
-)
-for (i in 1:no_states) { # over parameter values
-  lines(F_figS2[i,]~D(c_states[i], w_list)
-        , col = par_colors[i]
-        , lwd = linewidth
-  )
-  abline(v=D(c_states[i], w_opt_figS2[i]), lty = 2, lwd=2, col=par_colors_dark[i])
-}
-# Letter label for this panel
-text(offsetx, Nlim*offsety, "c", cex=2, col = "black")
-
-# PANEL F: A.3, varying over AAw -------------------
-
-# Initialize 2-d arrays
-# Each is a list over w, but with rows being parameter state
-N_figS2 <- array(NaN, c(no_states, resolution))
-F_figS2 <- array(NaN, c(no_states, resolution))
-Nc_figS2 <- array(NaN, c(no_states, resolution))
-w_opt_figS2 <- array(NaN, c(no_states))
-
-for (i in 1:no_states) { # over parameter values
-  AAw <- AAw_list[i]
-  N_figS2[i,] <- N_A3(c_fixed,w_list)
-  F_figS2[i,] <- F(N_figS2[i,], D_over_w)
-  Nc_figS2[i,] <- N_A3(c_fixed,rep(0, resolution))
-  w_opt_figS2[i] <- w_list[which(F_figS2[i,]==max(F_figS2[i,]))]
-}
-AAw <- default_AAw
-
-plot(NULL
-     , ylim= c(0, Nlim)
-     , xlim= c(0, 1)
-     , xaxt= 'n'
-     , yaxt= 'n'
-)
-for (i in 1:no_states) { # over parameter values
-  lines(F_figS2[i,]~D_over_w
-        , col = par_colors[i]
-        , lwd = linewidth
-  )
-  abline(v=D(c_fixed, w_opt_figS2[i]), lty = 2, lwd=2, col=par_colors_dark[i])
-}
-# Letter label for this panel
-text(offsetx, Nlim*offsety, "f", cex=2, col = "black")
-
-# PANEL I: A.3, varying over aw -------------------
-
-# Initialize 2-d arrays
-# Each is a list over w, but with rows being parameter state
-N_figS2 <- array(NaN, c(no_states, resolution))
-F_figS2 <- array(NaN, c(no_states, resolution))
-Nc_figS2 <- array(NaN, c(no_states, resolution))
-w_opt_figS2 <- array(NaN, c(no_states))
-
-for (i in 1:no_states) { # over parameter values
-  aw <- aw_list[i]
-  N_figS2[i,] <- N_A3(c_fixed,w_list)
-  F_figS2[i,] <- F(N_figS2[i,], D_over_w)
-  Nc_figS2[i,] <- N_A3(c_fixed,rep(0, resolution))
-  w_opt_figS2[i] <- w_list[which(F_figS2[i,]==max(F_figS2[i,]))]
-}
-aw <- default_aw
-
-plot(NULL
-     , ylim= c(0, Nlim)
-     , xlim= c(0, 1)
-     , yaxt= 'n'
-     , xaxt= 'n'
-)
-for (i in 1:no_states) { # over parameter values
-  lines(F_figS2[i,]~D_over_w
-        , col = par_colors[i]
-        , lwd = linewidth
-  )
-  abline(v=D(c_fixed, w_opt_figS2[i]), lty = 2, lwd=2, col=par_colors[i])
-}
-# Letter label for this panel
-text(offsetx, Nlim*offsety, "i", cex=2, col = "black")
-# PANEL L: A.3, varying over ac -------------------
-
-# Initialize 2-d arrays
-# Each is a list over w, but with rows being parameter state
-N_figS2 <- array(NaN, c(no_states, resolution))
-F_figS2 <- array(NaN, c(no_states, resolution))
-Nc_figS2 <- array(NaN, c(no_states, resolution))
-w_opt_figS2 <- array(NaN, c(no_states))
-
-for (i in 1:no_states) { # over parameter values
-  ac <- ac_list[i]
-  N_figS2[i,] <- N_A3(c_fixed,w_list)
-  F_figS2[i,] <- F(N_figS2[i,], D_over_w)
-  Nc_figS2[i,] <- N_A3(c_fixed,rep(0, resolution))
-  w_opt_figS2[i] <- w_list[which(F_figS2[i,]==max(F_figS2[i,]))]
-}
-ac <- default_ac
-
-plot(NULL
-     , ylim= c(0, Nlim)
-     , xlim= c(0, 1)
-     , yaxt= 'n'
-)
-for (i in 1:no_states) { # over parameter values
-  lines(F_figS2[i,]~D_over_w
-        , col = par_colors[i]
-        , lwd = linewidth
-  )
-  abline(v=D(c_fixed, w_opt_figS2[i]), lty = 2, lwd=2, col=par_colors[i])
-}
-# Letter label for this panel
-text(offsetx, Nlim*offsety, "l", cex=2, col = "black")
-
-# X-Axis label ----------------------------
-# Text in outer margin for overarching x-axis label
-mtext(text = "Proportion of pollinators in patch on crop: D = c/(c+w)", 
-      side = 1, line = 2, las=1, cex=0.8, outer=TRUE)
-# Y-Axis label ----------------------------
-# Text in outer margin for overarching x-axis label
-mtext(text = "Bees on crop: F = N*D", 
-      side = 2, line = 2, las=3, cex=0.8, outer=TRUE)
-
-### END FIG S2alt --------------------------
 
 ### FIG S3alt PARAMETERS ON p* 2x2 ------------------------
 # x-axis D, y-axis y, 3 columns = 3 models
