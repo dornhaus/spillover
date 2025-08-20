@@ -3,7 +3,7 @@
 # Spillover project: Bees 'spilling over' into crop from wildflowers planted to attract them
 
 # Paper reference: XXX (to be updated on acceptance of the paper)
-### PAPER VERSION R1 April 2025
+### PAPER VERSION R2 Aug 2025
 # FIGURES IN PAPER
 
 ### Libraries and graphics setup ------------------
@@ -121,8 +121,8 @@ plot(NULL
      , yaxt = 'n'
 )
 # X-axis label with odd spacing
-mtext(text = "            -c (amount of crop)                             w (amount of wildflowers)",
-      side = 1, line = 3, adj = 0, cex = 1)
+mtext(bquote('     '*italic(-c)*' (amount of crop)       '*italic(w)*' (amount of wildflowers)'),
+      side = 1, line = 3, adj = 0, cex = 1.5)
 # N(w) according to eq [5]; 'x' is w
 curve(N_eq5(x, Nc, aw, AAw)
       , from=0
@@ -164,15 +164,21 @@ segments(x0 = 0, x1 = 15, y0 = Nc, y1 = Nc, lty=1, lwd=3, col=colorlist[3])
 abline(v=w_optimal, lty=2, lwd=2, col="grey")
 abline(v=-c_fixed, lty=2, lwd=2, col="grey")
 # Labels for c and w*
-text(1.5-c_fixed, ymax*0.6, paste("c=", round(c_fixed, 1)), cex=1.5)
-text(1.5+w_optimal, ymax*0.6, paste("w*=", round(w_optimal,2)), cex=1.5)
+cf <- 
+text(0.3-c_fixed, ymax*0.6, bquote(italic(c)== .(round(c_fixed, 1))), cex=1.5, pos=4)
+text(0.3+w_optimal, ymax*0.6, bquote(italic(w)*'*'== .(round(w_optimal,2))), cex=1.5, pos=4)
 # Overall legend
+legendtext <- c(
+  bquote(italic(N)*' (bees on crop and wildflowers)')
+  , bquote(italic(F)*' (bees on crop with wildflowers present)')
+  , bquote(italic(N)[c]*' (bees on crop without wildflowers)')
+  , bquote('Tangent from '*italic(-c))
+)
 legend("topleft"
-       , legend = c("N (bees on c+w)", "F (bees on crop with w)", "Nc (bees on crop without w)", "Tangent from -c")
+       , legend = legendtext
        , col = c(colorlist[1], colorlist[2], colorlist[3], colorlist[7])
        , pch = 19
        , cex = 1.2
-       , bg="transparent"
 )
 
 
@@ -206,8 +212,9 @@ F_over_c <- F(N_over_c, D_over_c)
 par(mfrow=c(3,2)) # 3 rows and 2 columns of graphs
 par(mar=c(0.5, 0.5, 0.5, 0.5), oma=c(4, 5, 0, 0), mgp=c(3, 1, 0), las=1)
 # Setting parameters to place text consistently
-textposx <- 50
+textposx <- 51.5
 textposy <- 0.35
+ymodul <- 0.08
 
 # First part:
 # Quick numerical illustration of N vs D
@@ -270,10 +277,18 @@ points(D_over_w ~ w_list
        , pch = 1
        , cex = pointsize
 )
-text(textposx, textposy, "N additive", cex=1.5, adj=c(0,0), pos=2)
+text(textposx, textposy, bquote(italic(N)*' additive'), cex=1.5, adj=c(0,0), pos=2)
 text(7, 0.9, "a", cex=2, adj=c(0,0))
+legendtext <- c(
+  bquote(italic(N)*' (total bees attracted)')
+  , bquote(italic(F)*' (bees on crop)')
+  , bquote(italic(N)[c]*' (bees on crop w/o wildflowers)')
+  , bquote(italic(D)*' (fraction of bees choosing crop)')
+  , bquote(italic(N)-italic(F)*' (bees on w)')
+  , "(bees on wildflowers w/o crop)"
+)
 legend("topright"
-       , legend = c("N (total bees)", "F (bees on c)", "Nc (bees on c without w)", "D (fraction on c)", "(bees on w)", "(bees on w without c)")
+       , legend = legendtext
        , col = c(colorlist[1], colorlist[2], colorlist[3], colorlist[4], colorlist[5], colorlist[6])
        , pch = 19
        , cex = 1.2
@@ -341,7 +356,7 @@ points(D_over_w ~ w_list
        , pch = 1
        , cex = pointsize
 )
-text(textposx, textposy, "N with local bees", cex=1.5, adj=c(0,0), pos=2)
+text(textposx, textposy, bquote(italic(N)*' with local bees'), cex=1.5, adj=c(0,0), pos=2)
 text(7, 0.9, "b", cex=2, adj=c(0,0))
 
 # N3: N equal to c + w * A
@@ -405,7 +420,7 @@ points(D_over_w ~ w_list
        , pch = 1
        , cex = pointsize
 )
-text(textposx, textposy, "attractive w", cex=1.5, adj=c(0,0), pos=2)
+text(textposx, textposy+ymodul, bquote('attractive '*italic(w)), cex=1.5, adj=c(0,0), pos=2)
 text(7, 0.9, "c", cex=2, adj=c(0,0))
 
 # N4: N diminishing with c+w
@@ -469,7 +484,7 @@ points(D_over_w ~ w_list
        , pch = 1
        , cex = pointsize
 )
-text(textposx, textposy, "N decelerating", cex=1.5, adj=c(0,0), pos=2)
+text(textposx, textposy+ymodul, bquote(italic(N)*' decelerating'), cex=1.5, adj=c(0,0), pos=2)
 text(7, 0.9, "d", cex=2, adj=c(0,0))
 
 # N5: N saturating with c+w
@@ -532,9 +547,9 @@ points(D_over_w ~ w_list
        , pch = 1
        , cex = pointsize
 )
-text(textposx, textposy, "N saturating", cex=1.5, adj=c(0,0), pos=2)
+text(textposx, textposy-ymodul, bquote(italic(N)*' saturating'), cex=1.5, adj=c(0,0), pos=2)
 text(7, 0.9, "e", cex=2, adj=c(0,0))
-mtext(text = "w (amount of wildflowers)",
+mtext(text = bquote(italic(w)*' (amount of wildflowers)'),
       side = 1, line = 3, cex = 0.8)
 
 # N6: Holling III, S curve initially accelerating
@@ -547,6 +562,7 @@ plot(D_over_w ~ w_list
      , xlab = "w (amount of wildflowers)"
      , ylab = "Effect on crop"
      , cex = pointsize
+     , yaxt = 'n'
      , yaxp = c(0, 2, 2)
 )
 N6 <- function(c, w) {
@@ -597,9 +613,9 @@ points(D_over_w ~ w_list
        , pch = 1
        , cex = pointsize
 )
-text(textposx, textposy, "N Holling III", cex=1.5, adj=c(0,0), pos=2)
+text(textposx, textposy-ymodul, bquote(italic(N)*' as Holling III'), cex=1.5, adj=c(0,0), pos=2)
 text(7, 0.9, "f", cex=2, adj=c(0,0))
-mtext(text = "w (amount of wildflowers)",
+mtext(text = bquote(italic(w)*' (amount of wildflowers)'),
       side = 1, line = 3, cex = 0.8)
 
 mtext(text = "Distribution of pollinator visits (scaled)",
@@ -710,23 +726,31 @@ points(Ntotal ~ p
        , col=colorlist[1]
        , pch=19
        , cex=pointsize)
-legend("topright"
-       , legend = c("Total area * bees (N)", "'Yield' for c (f)", "Bees attracted by c", "'Yield' for w", "Bees attracted by w")
-       , col = c(colorlist[1], colorlist[2], colorlist[3], colorlist[5], colorlist[6])
-       , pch = 19
-       #, title= paste("Parameters b=", b, ", aw=", aw, sep="")
-       , bty = "n")
 # Overall x axis label
-mtext(text = "Proportion of area that is w (p)",
+mtext(bquote(italic(p)==' Proportion of area that is '*italic(w)),
       side = 1, line = 2, cex = 1, las = 1, outer = TRUE)
 # Plotting horizontal and vertical lines at optimal p and yield
 optimalY <- max(yield_B(p_vector, b, total_area, AAw, AAc, aw, ac))
 optimalp <- p_vector[which(yield_B(p_vector, b, total_area, AAw, AAc, aw, ac)==optimalY)]
 abline(h=optimalY, lty=2, lwd=2, col="grey")
 abline(v=optimalp, lty=2, lwd=2, col="grey")
+legendtext <- c(
+  bquote('Bees attracted ('*italic(N)*')')
+  , bquote('Yield for crop ('*italic(f)*')')
+  , "Bees attracted by the crop"
+  , "'Yield' for wildflowers"
+  , "Bees attracted by the wildflowers"
+)
+legend(x = -0.03, y = Flim_B*1.03
+       , legend = legendtext
+       , col = c(colorlist[1], colorlist[2], colorlist[3], colorlist[5], colorlist[6])
+       , pch = 19
+       , box.col = "transparent"
+       , bg = "white"
+)
 # Additional labels
-text(0.1, optimalY*1.1, adj=0, paste("Optimal p*=", round(optimalp, 2), " \ngives f*=", round(optimalY,1), sep=""))
-text(0.1, 0.98*Flim_B, "a", cex=2, adj=c(0,0))
+text(0.1, optimalY*1.1, adj=0, bquote(atop('Optimal '*italic(p)*'*'== .(round(optimalp, 2)), 'gives '*italic(f)*'*'== .(round(optimalY,1)))))
+text(0.9, 0.98*Flim_B, "a", cex=2, adj=c(0,0))
 
 
 # Parameters panel b ----------------------------
@@ -793,8 +817,8 @@ optimalY <- max(yield_B(p_vector, b, total_area, AAw, AAc, aw, ac))
 optimalp <- p_vector[which(yield_B(p_vector, b, total_area, AAw, AAc, aw, ac)==optimalY)]
 abline(h=optimalY, lty=2, lwd=2, col="grey")
 abline(v=optimalp, lty=2, lwd=2, col="grey")
-text(optimalp*1.1, optimalY*1.25, adj=0, paste("Optimal p*=", round(optimalp, 2), " \ngives f*=", round(optimalY,1), sep=""))
-text(0, 0.98*Flim_B, "b", cex=2, adj=c(0,0))
+text(optimalp*1.1, optimalY*1.25, adj=0, bquote(atop('Optimal '*italic(p)*'*'== .(round(optimalp, 2)), 'gives '*italic(f)*'*'== .(round(optimalY,1)))))
+text(0.9, 0.98*Flim_B, "b", cex=2, adj=c(0,0))
 
   
 

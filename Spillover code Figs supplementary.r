@@ -3,7 +3,7 @@
 # Spillover project: Bees 'spilling over' into crop from wildflowers planted to attract them
 
 # Paper reference: XXX (to be updated on acceptance of the paper)
-# PAPER VERSION R1 April 2025
+# PAPER VERSION R2 Aug 2025
 # SUPPLEMENTARY MATERIALS
 
 ### Contents ------------------
@@ -110,8 +110,8 @@ Nlim <- 25 # Max for N graph
 F_clim <- Nlim / 10 # Max for F/c graph
 wlim <- 20 # for plotting
 clim <- 50 # Max c for graph
-offsetx <- 0.1
-offsety <- 0.9
+offsetx <- 0.08
+offsety <- 0.92
 point_transparency <- 0.5
 
 # Make 3x3 panels
@@ -153,6 +153,21 @@ points(Ns_A1 ~ D_over_w
        , col= alpha(colorlist[1], point_transparency)
        , pch = 19
 )
+legendtext <- c(
+  bquote(italic(N)*' (total bees attracted)')
+  , bquote(italic(F)[w]==italic(N-F)*' (bees on wildflowers')
+  , bquote(italic(F)*' (bees on crop)')
+  , bquote(italic(N)[c]*' (bees on crop without wildflowers)')
+)
+legend(x=0-0.01, y=Nlim*1.02
+       , legend = legendtext
+       , col = c(colorlist[1], colorlist[5], colorlist[2], colorlist[3])
+       , pch = 19
+       , cex = 0.9
+       , pt.cex = 2
+       , box.col = "transparent"
+       , bg = "white"
+)
 # Letter label for this panel
 text(1-offsetx, Nlim*offsety, "a", cex=2, col = "black")
 mtext(text = "Model A.1", 
@@ -160,16 +175,6 @@ mtext(text = "Model A.1",
 # Text in local margin for this row's y-axis label
 mtext(text = "Number of bees", 
       side = 2, line = 3, las=3, cex=0.8)
-legend("topleft"
-       , legend = c("N (total bees)", "N-F (bees on w)", "F (bees on c)", "Nc (bees on c at w=0")
-       , col = c(colorlist[1], colorlist[5], colorlist[2], colorlist[3])
-       , pch = 19
-       , cex = 0.9
-       , pt.cex = 2
-       , bg="transparent"
-       , bty = 'n'
-       
-)
 # ROW 1: Number of bees: N, Fc, Fw=N-Fc, Nc
 # column 2: Model A2
 plot(NULL
@@ -324,17 +329,22 @@ points((Ns_A3-Fs_A3)-N_A3(0,w_list) ~ D_over_w
 )
 # Letter label for this panel
 text(1*offsetx, Nlim *(offsety*2-1), "e", cex=2, col = "black")
-legend("topright"
-       , legend = c("Fw-N(0,w) \n(bees gained by w because of c)", "F-Nc \n(bees gained by c because of w)")
+legendtext <- c(
+  bquote('Bees gained by w because of c: '*italic(F)[w]-italic(N)(0,italic(w)))
+  , bquote('Bees gained by c because of w: '*italic(F-N)[c])
+)
+par(xpd = NA)
+legend(x=0-0.2, y=0-Nlim*0.6
+       , legend = legendtext
        , col = c(colorlist[5], colorlist[2])
        , pch = 19
        , cex = 0.8
        , pt.cex = 2
-       , bg="transparent"
-       , bty = "n"
+       , bg = "white"
+       , box.col = "black"
        , y.intersp = 1.5
 )
-
+par(xpd=FALSE)
 # 3rd ROW - Bees per amount of c and w ---------------
 # ROW 3: Fc/c and Fw/w
 # column 1: Model A.1
@@ -409,12 +419,27 @@ points((Ns_A3-Fs_A3)/w_list ~ D_over_w
        , col= alpha(colorlist[5], point_transparency)
        , pch = 19
 )
+legendtext <- c(
+  bquote('Bees on crop per plant '*italic(F)/italic(c)*'= Bees on wildflower per plant '*italic(F)[w]/italic(w)*'='*(italic(F)-italic(N))/italic(w))
+)
+par(xpd = NA)
+legend(x=0-0.8, y=F_clim*0.85
+       , legend = legendtext
+       , col = c(colorlist[5])
+       , pch = 19
+       , cex = 0.8
+       , pt.cex = 2
+       , bg = "white"
+       , box.col = "black"
+       , y.intersp = 1.5
+)
+par(xpd=FALSE)
 # Letter label for this panel
 text(1*offsetx, F_clim*offsety, "i", cex=2, col = "black")
 
 # X-Axis label ----------------------------
 # Text in outer margin for overarching x-axis label
-mtext(text = "Fraction of pollinators in patch on crop: D = c/(c+w)", 
+mtext(bquote('Fraction of pollinators in patch on crop: '*italic(D)==italic(c)/(italic(c+w))), 
       side = 1, line = 3, las=1, cex=0.8, outer=TRUE)
 
 ### End Fig S1 ----------------------
@@ -436,6 +461,7 @@ F_lines <- 1
 N_lines <- 2
 leg_x <- -0.7
 leg_y <- 0.9
+linespacing <- 0.04 # the actual spacing is 2x this
 
 # Make 3x4 panels
 par(mfcol=c(4,3))
@@ -488,12 +514,16 @@ for (i in 1:no_states) { # over parameter values
   abline(v=D(c_states[i], w_opt_figS2[i]), lty = opt_w_lines, lwd=2, col=F_colors[i])
 }
 
-text(D(c_states[1], w_opt_figS2[1])-0.015, Nlim*0.7
-       , paste("w*=", round(w_opt_figS2[1], 1))
-       , cex=1, col="black", pos=2, xpd=NA
-     )
-text(D(c_states[no_states], w_opt_figS2[no_states])+0.015, Nlim*0.7
-     , paste("w*=\n", round(w_opt_figS2[no_states], 1))
+text(D(c_states[1], w_opt_figS2[1])-0.01, Nlim*0.7
+     , bquote(italic(w)*'*'== .(round(w_opt_figS2[1], 1)))
+     , cex=1, col="black", pos=2, xpd=NA
+)
+text(D(c_states[no_states], w_opt_figS2[no_states])+0.01, Nlim*0.7*(1+linespacing)
+     , bquote(italic(w)*'*')
+     , cex=1, col="black", pos=4, xpd=NA
+)
+text(D(c_states[no_states], w_opt_figS2[no_states])-0.02, Nlim*0.7*(1-linespacing)
+     , bquote(''== .(round(w_opt_figS2[no_states], 1)))
      , cex=1, col="black", pos=4, xpd=NA
 )
 # Letter label for this panel
@@ -501,8 +531,8 @@ text(offsetx, Nlim*offsety, "a", cex=2, col = "black")
 mtext(text = "Model A.1", 
       side = 3, line = 0, las=1, cex=1, xpd=TRUE)
 # Legends & Row titles in left margin -----------------------------
-text(leg_x, Nlim, "Varying c \n(amount of crop)"
-     , cex=1, col="black", pos=4, xpd=NA)
+text(leg_x, Nlim*(1+linespacing), bquote('Varying '*italic(c)), cex=1, col="black", pos=4, xpd=NA)
+text(leg_x, Nlim*(1-linespacing), "(amount of crop)", cex=1, col="black", pos=4, xpd=NA)
 legend(x=leg_x
        , y=Nlim*leg_y
        , xpd = NA
@@ -518,7 +548,12 @@ legend(x=leg_x
 legend(x=leg_x+0.1
        , y=Nlim*leg_y
        , xpd = NA
-       , legend = paste("c=", c_states)
+       , legend = c(bquote(italic(c)== .(c_states[1])),
+                    bquote(italic(c)== .(c_states[2])),
+                    bquote(italic(c)== .(c_states[3])),
+                    bquote(italic(c)== .(c_states[4])),
+                    bquote(italic(c)== .(c_states[5]))
+       )
        , col = F_colors
        , pch = 19
        , cex = 0.9
@@ -566,12 +601,12 @@ for (i in 1:no_states) { # over parameter values
 # Letter label for this panel
 text(offsetx, Nlim*offsety, "d", cex=2, col = "black")
 text(D(c_fixed, w_opt_figS2[no_states])-0.015, Nlim*0.8
-     , paste("w*=", round(w_opt_figS2[no_states], 1))
+     , bquote(italic(w)*'*'== .(round(w_opt_figS2[no_states], 1)))
      , cex=1, col="black", pos=2, xpd=NA
 )
 # Legends & Row titles in left margin -----------------------------
-text(leg_x, Nlim, "Varying Aw \n(attractivenes of w)"
-     , cex=1, col="black", pos=4, xpd=NA)
+text(leg_x, Nlim*(1+linespacing), bquote('Varying '*italic(A)[w]), cex=1, col="black", pos=4, xpd=NA)
+text(leg_x, Nlim*(1-linespacing), "(attractivenes of w)", cex=1, col="black", pos=4, xpd=NA)
 legend(x=leg_x
        , y=Nlim*leg_y
        , xpd = NA
@@ -587,7 +622,12 @@ legend(x=leg_x
 legend(x=leg_x+0.1
        , y=Nlim*leg_y
        , xpd = NA
-       , legend = paste("Aw=", AAw_list)
+       , legend = c(bquote(italic(A)[w]== .(AAw_list[1])),
+                    bquote(italic(A)[w]== .(AAw_list[2])),
+                    bquote(italic(A)[w]== .(AAw_list[3])),
+                    bquote(italic(A)[w]== .(AAw_list[4])),
+                    bquote(italic(A)[w]== .(AAw_list[5]))
+       )
        , col = F_colors
        , pch = 19
        , cex = 0.9
@@ -634,12 +674,12 @@ for (i in 1:no_states) { # over parameter values
 # Letter label for this panel
 text(offsetx, Nlim*offsety, "g", cex=2, col = "black")
 text(D(c_fixed, w_opt_figS2[no_states])-0.015, Nlim*0.7
-     , paste("w*=", round(w_opt_figS2[no_states], 1))
+     , bquote(italic(w)*'*'== .(round(w_opt_figS2[no_states], 1)))
      , cex=1, col="black", pos=2, xpd=NA
 )
 # Legends & Row titles in left margin -----------------------------
-text(leg_x, Nlim, "Varying aw \n(shape of N(w))"
-     , cex=1, col="black", pos=4, xpd=NA)
+text(leg_x, Nlim*(1+linespacing), bquote('Varying '*italic(a)[w]), cex=1, col="black", pos=4, xpd=NA)
+text(leg_x, Nlim*(1-linespacing), bquote('(shape of '*italic(N(w))*')'), cex=1, col="black", pos=4, xpd=NA)
 legend(x=leg_x
        , y=Nlim*leg_y
        , xpd = NA
@@ -655,7 +695,12 @@ legend(x=leg_x
 legend(x=leg_x+0.1
        , y=Nlim*leg_y
        , xpd = NA
-       , legend = paste("aw=", aw_list)
+       , legend = c(bquote(italic(a)[w]== .(aw_list[1])),
+                    bquote(italic(a)[w]== .(aw_list[2])),
+                    bquote(italic(a)[w]== .(aw_list[3])),
+                    bquote(italic(a)[w]== .(aw_list[4])),
+                    bquote(italic(a)[w]== .(aw_list[5]))
+       )
        , col = F_colors
        , pch = 19
        , cex = 0.9
@@ -699,14 +744,14 @@ for (i in 1:no_states) { # over parameter values
   abline(v=D(c_fixed, w_opt_figS2[i]), lty = opt_w_lines, lwd=2, col=F_colors[i])
 }
 text(D(c_fixed, w_opt_figS2[no_states])-0.015, Nlim*0.7
-     , paste("w*=", round(w_opt_figS2[no_states], 1))
+     , bquote(italic(w)*'*'== .(round(w_opt_figS2[no_states], 1)))
      , cex=1, col="black", pos=2, xpd=NA
 )
 # Letter label for this panel
 text(offsetx, Nlim*offsety, "j", cex=2, col = "black")
 # Legends & Row titles in left margin -----------------------------
-text(leg_x, Nlim, "Varying ac \n(shape of N(c))"
-     , cex=1, col="black", pos=4, xpd=NA)
+text(leg_x, Nlim*(1+linespacing), bquote('Varying '*italic(a)[c]), cex=1, col="black", pos=4, xpd=NA)
+text(leg_x, Nlim*(1-linespacing), bquote('(shape of '*italic(N(c))*')'), cex=1, col="black", pos=4, xpd=NA)
 legend(x=leg_x
        , y=Nlim*leg_y
        , xpd = NA
@@ -722,7 +767,12 @@ legend(x=leg_x
 legend(x=leg_x+0.1
        , y=Nlim*leg_y
        , xpd = NA
-       , legend = paste("ac=", ac_list)
+       , legend = c(bquote(italic(a)[c]== .(ac_list[1])),
+                    bquote(italic(a)[c]== .(ac_list[2])),
+                    bquote(italic(a)[c]== .(ac_list[3])),
+                    bquote(italic(a)[c]== .(ac_list[4])),
+                    bquote(italic(a)[c]== .(ac_list[5]))
+       )
        , col = F_colors
        , pch = 19
        , cex = 0.9
@@ -730,14 +780,15 @@ legend(x=leg_x+0.1
        , bty = 'n'
        , bg= "transparent"
 )
-legend(x=-0.85
-       , y=Nlim*0.16
+legend(x=-0.78
+       , y=0-Nlim*0.16
        , xpd = NA
-       , legend = c("N: Total bees \nin patch", "F: bees on c")
+       , legend = c(bquote(italic(N)=='Total bees in patch')
+                    , bquote(italic(F)=='bees on crop'))
        , col = c(N_colors[3],F_colors[3])
        , lwd = 2
        , lty = c(N_lines, F_lines)
-       , cex = 1.2
+       , cex = 1
        , bty = 'n'
        , bg= "transparent"
 )
@@ -781,11 +832,11 @@ for (i in 1:no_states) { # over parameter values
   abline(v=D(c_states[i], w_opt_figS2[i]), lty = opt_w_lines, lwd=2, col=F_colors[i])
 }
 text(D(c_states[1], w_opt_figS2[1])-0.3, Nlim*0.1
-     , paste("w*=", round(w_opt_figS2[1], 1))
+     , bquote(italic(w)*'*'== .(round(w_opt_figS2[1], 1)))
      , cex=1, col=F_colors[1], pos=4, xpd=NA
 )
 text(D(c_states[no_states], w_opt_figS2[no_states])+0.06, Nlim*0.1
-     , paste("w*=", round(w_opt_figS2[no_states], 1))
+     , bquote(italic(w)*'*'== .(round(w_opt_figS2[no_states], 1)))
      , cex=1, col=F_colors[no_states], pos=4, xpd=NA
 )
 # Letter label for this panel
@@ -831,7 +882,7 @@ for (i in 1:no_states) { # over parameter values
   abline(v=D(c_fixed, w_opt_figS2[i]), lty = opt_w_lines, lwd=2, col=F_colors[i])
 }
 text(D(c_fixed, w_opt_figS2[no_states])-0.015, Nlim*0.8
-     , paste("w*=", round(w_opt_figS2[no_states], 1))
+     , bquote(italic(w)*'*'== .(round(w_opt_figS2[no_states], 1)))
      , cex=1, col="black", pos=2, xpd=NA
 )
 # Letter label for this panel
@@ -914,11 +965,15 @@ for (i in 1:no_states) { # over parameter values
   abline(v=D(c_fixed, w_opt_figS2[i]), lty = opt_w_lines, lwd=2, col=F_colors[i])
 }
 text(D(c_fixed, w_opt_figS2[1])-0.015, Nlim*0.2
-     , paste("w*=", round(w_opt_figS2[1], 1))
+     , bquote(italic(w)*'*'== .(round(w_opt_figS2[1], 1)))
      , cex=1, col="black", pos=2, xpd=NA
 )
-text(D(c_fixed, w_opt_figS2[no_states])+0.015, Nlim*0.2
-     , paste("w*=", round(w_opt_figS2[no_states], 1))
+text(D(c_fixed, w_opt_figS2[no_states])+0.015, Nlim*0.2+linespacing*0.8
+     , bquote(italic(w)*'*')
+     , cex=1, col="black", pos=4, xpd=NA
+)
+text(D(c_fixed, w_opt_figS2[no_states])-0.02, Nlim*0.2-linespacing*0.8
+     , bquote(''== .(round(w_opt_figS2[no_states], 1)))
      , cex=1, col="black", pos=4, xpd=NA
 )
 # Letter label for this panel
@@ -964,11 +1019,11 @@ for (i in 1:no_states) { # over parameter values
   abline(v=D(c_states[i], w_opt_figS2[i]), lty = opt_w_lines, lwd=2, col=F_colors[i])
 }
 text(D(c_states[1], w_opt_figS2[1])-0.02, Nlim*0.7
-     , paste("w*=", round(w_opt_figS2[1], 1))
+     , bquote(italic(w)*'*'== .(round(w_opt_figS2[1], 1)))
      , cex=1, col="black", pos=2, xpd=NA
 )
 text(D(c_states[no_states], w_opt_figS2[no_states])+0.02, Nlim*0.7
-     , paste("w*=", round(w_opt_figS2[no_states], 1))
+     , bquote(italic(w)*'*'== .(round(w_opt_figS2[no_states], 1)))
      , cex=1, col="black", pos=4, xpd=NA
 )
 # Letter label for this panel
@@ -1013,9 +1068,9 @@ for (i in 1:no_states) { # over parameter values
   )
   abline(v=D(c_fixed, w_opt_figS2[i]), lty = opt_w_lines, lwd=2, col=F_colors[i])
 }
-text(D(c_fixed, w_opt_figS2[no_states])-0.25, Nlim*0.8
-     , paste("w*=", round(w_opt_figS2[no_states], 1))
-     , cex=1, col="black", pos=4, xpd=NA
+text(D(c_fixed, w_opt_figS2[no_states])-0.015, Nlim*0.8
+     , bquote(italic(w)*'*'== .(round(w_opt_figS2[no_states], 1)))
+     , cex=1, col="black", pos=2, xpd=NA
 )
 # Letter label for this panel
 text(offsetx, Nlim*offsety, "f", cex=2, col = "black")
@@ -1057,13 +1112,17 @@ for (i in 1:no_states) { # over parameter values
   )
   abline(v=D(c_fixed, w_opt_figS2[i]), lty = opt_w_lines, lwd=2, col=F_colors[i])
 }
-text(D(c_fixed, w_opt_figS2[no_states])+0.015, Nlim*0.7
-     , paste("w*=\n", round(w_opt_figS2[no_states], 1))
+text(D(c_fixed, w_opt_figS2[2])-0.015, Nlim*0.7
+     , bquote(italic(w)*'*'== .(round(w_opt_figS2[2], 1)))
+     , cex=1, col="black", pos=2, xpd=NA
+)
+text(D(c_fixed, w_opt_figS2[no_states])+0.015, Nlim*0.7*(1+linespacing)
+     , bquote(italic(w)*'*')
      , cex=1, col="black", pos=4, xpd=NA
 )
-text(D(c_fixed, w_opt_figS2[2])-0.015, Nlim*0.7
-     , paste("w*=", round(w_opt_figS2[2], 1))
-     , cex=1, col="black", pos=2, xpd=NA
+text(D(c_fixed, w_opt_figS2[no_states])-0.02, Nlim*0.7*(1-linespacing)
+     , bquote(''== .(round(w_opt_figS2[no_states], 1)))
+     , cex=1, col="black", pos=4, xpd=NA
 )
 # Letter label for this panel
 text(offsetx, Nlim*offsety, "i", cex=2, col = "black")
@@ -1104,7 +1163,7 @@ for (i in 1:no_states) { # over parameter values
   abline(v=D(c_fixed, w_opt_figS2[i]), lty = opt_w_lines, lwd=2, col=F_colors[i])
 }
 text(D(c_fixed, w_opt_figS2[no_states])+0.02, Nlim*0.7
-     , paste("w*=", round(w_opt_figS2[no_states], 1))
+     , bquote(italic(w)*'*'== .(round(w_opt_figS2[no_states], 1)))
      , cex=1, col="black", pos=4, xpd=NA
 )
 # Letter label for this panel
@@ -1112,7 +1171,7 @@ text(offsetx, Nlim*offsety, "l", cex=2, col = "black")
 
 # X-Axis label ----------------------------
 # Text in outer margin for overarching x-axis label
-mtext(text = "Fraction of pollinators in patch on crop: D = c/(c+w)", 
+mtext(bquote('Fraction of pollinators in patch on crop: '*italic(D) == italic(c)/(italic(c+w))), 
       side = 1, line = 2, las=1, cex=0.8, outer=TRUE)
 # Y-Axis label ----------------------------
 # Text in outer margin for overarching y-axis label
@@ -1206,8 +1265,10 @@ linetransp <- 0.8
 p_max <- 0.5
 Ylim_B <- 2 # Max yield for graph
 Y_clim_B <- 2 # Max for yield/c graph
-leg_x <- -0.7
+leg_x <- -0.6
+leg_y <- 0.8
 xbars <- 1
+linespacing <- 0.04
 
 # Make 4x3 panels
 par(mfrow=c(4,2))
@@ -1255,8 +1316,8 @@ for (i in 1:no_states) { # over parameter values
 # Letter label for this panel
 text(offsetx, Ylim_B*offsety, "a", cex=2, col = "black")
 # Legends & Row titles in left margin -----------------------------
-text(leg_x, Ylim_B, "Varying b \n(quality of w)"
-     , cex=1, col="black", pos=4, xpd=NA)
+text(leg_x, Ylim_B*(leg_y+0.1)*(1+linespacing), bquote('Varying '*italic(b)), cex=1, col="black", pos=4, xpd=NA)
+text(leg_x, Ylim_B*(leg_y+0.1)*(1-linespacing), "(quality of wildf reward)", cex=1, col="black", pos=4, xpd=NA)
 legend(x=leg_x
        , y=Ylim_B*leg_y
        , xpd = NA
@@ -1269,10 +1330,15 @@ legend(x=leg_x
        , bty = 'n'
        , bg= "transparent"
 )
-legend(x=leg_x+0.1
+legend(x=leg_x+0.08
        , y=Ylim_B*leg_y
        , xpd = NA
-       , legend = paste("b=", b_vector)
+       , legend = c(bquote(italic(b)== .(b_vector[1])),
+                    bquote(italic(b)== .(b_vector[2])),
+                    bquote(italic(b)== .(b_vector[3])),
+                    bquote(italic(b)== .(b_vector[4])),
+                    bquote(italic(b)== .(b_vector[5]))
+       )
        , col = F_colors
        , pch = 19
        , cex = 0.9
@@ -1280,6 +1346,7 @@ legend(x=leg_x+0.1
        , bty = 'n'
        , bg= "transparent"
 )
+
 # 2nd COLUMN ROW 1 -------------------------------
 hatched_barplot_horizontal(rep(xbars, no_states))
 #barplot(rep(xbars, no_states)~b_vector
@@ -1304,14 +1371,11 @@ box(lwd = 1)
 # Letter label for this panel
 text(xbars*(1-offsetx), 5.5, "b", cex=2, col = "black")
 p_opt_figS3 <- round(p_opt_figS3, 2)
-p_star_vals <- paste("p*=", p_opt_figS3[5], "\n\n"
-                     , "p*=", p_opt_figS3[4], "\n\n"
-                     , "p*=", p_opt_figS3[3], "\n\n"
-                     , "p*=", p_opt_figS3[2], "\n\n"
-                     , "p*=", p_opt_figS3[1], sep = ""
-                     )
-mtext(text = p_star_vals, 
-      side = 4, line = 1, las=1, cex=0.8, outer=FALSE)
+text(1, 5.5, bquote(italic(p)*'*'== .(p_opt_figS3[5])), cex=1, col="black", pos=4, xpd=NA)
+text(1, 4.2, bquote(italic(p)*'*'== .(p_opt_figS3[4])), cex=1, col="black", pos=4, xpd=NA)
+text(1, 3, bquote(italic(p)*'*'== .(p_opt_figS3[3])), cex=1, col="black", pos=4, xpd=NA)
+text(1, 1.9, bquote(italic(p)*'*'== .(p_opt_figS3[2])), cex=1, col="black", pos=4, xpd=NA)
+text(1, 0.7, bquote(italic(p)*'*'== .(p_opt_figS3[1])), cex=1, col="black", pos=4, xpd=NA)
 
 # ROW 2: B, varying over AAw -------------------
 N_figS3 <- array(NaN, c(no_states, resolution_B))
@@ -1348,8 +1412,8 @@ for (i in 1:no_states) { # over parameter values
 # Letter label for this panel
 text(offsetx, Ylim_B*offsety, "c", cex=2, col = "black")
 # Legends & Row titles in left margin -----------------------------
-text(leg_x, Ylim_B, "Varying Aw \n(attractivenes of w)"
-     , cex=1, col="black", pos=4, xpd=NA)
+text(leg_x, Ylim_B*(leg_y+0.1)*(1+linespacing), bquote('Varying '*italic(A)[w]), cex=1, col="black", pos=4, xpd=NA)
+text(leg_x, Ylim_B*(leg_y+0.1)*(1-linespacing), "(attractiveness of wildf)", cex=1, col="black", pos=4, xpd=NA)
 legend(x=leg_x
        , y=Ylim_B*leg_y
        , xpd = NA
@@ -1362,10 +1426,15 @@ legend(x=leg_x
        , bty = 'n'
        , bg= "transparent"
 )
-legend(x=leg_x+0.1
+legend(x=leg_x+0.08
        , y=Ylim_B*leg_y
        , xpd = NA
-       , legend = paste("Aw=", AAw_list)
+       , legend = c(bquote(italic(A)[w]== .(AAw_list[1])),
+                    bquote(italic(A)[w]== .(AAw_list[2])),
+                    bquote(italic(A)[w]== .(AAw_list[3])),
+                    bquote(italic(A)[w]== .(AAw_list[4])),
+                    bquote(italic(A)[w]== .(AAw_list[5]))
+       )
        , col = F_colors
        , pch = 19
        , cex = 0.9
@@ -1389,14 +1458,12 @@ box(lwd = 1)
 # Letter label for this panel
 text(xbars*(1-offsetx), 5.5, "d", cex=2, col = "black")
 p_opt_figS3 <- round(p_opt_figS3, 2)
-p_star_vals <- paste("p*=", p_opt_figS3[5], "\n\n"
-                     , "p*=", p_opt_figS3[4], "\n\n"
-                     , "p*=", p_opt_figS3[3], "\n\n"
-                     , "p*=", p_opt_figS3[2], "\n\n"
-                     , "p*=", p_opt_figS3[1], sep = ""
-)
-mtext(text = p_star_vals, 
-      side = 4, line = 1, las=1, cex=0.8, outer=FALSE)
+text(1, 5.5, bquote(italic(p)*'*'== .(p_opt_figS3[5])), cex=1, col="black", pos=4, xpd=NA)
+text(1, 4.2, bquote(italic(p)*'*'== .(p_opt_figS3[4])), cex=1, col="black", pos=4, xpd=NA)
+text(1, 3, bquote(italic(p)*'*'== .(p_opt_figS3[3])), cex=1, col="black", pos=4, xpd=NA)
+text(1, 1.9, bquote(italic(p)*'*'== .(p_opt_figS3[2])), cex=1, col="black", pos=4, xpd=NA)
+text(1, 0.7, bquote(italic(p)*'*'== .(p_opt_figS3[1])), cex=1, col="black", pos=4, xpd=NA)
+
 # ROW 3: B, varying over aw -------------------
 N_figS3 <- array(NaN, c(no_states, resolution_B))
 Y_figS3 <- array(NaN, c(no_states, resolution_B))
@@ -1433,8 +1500,8 @@ for (i in 1:no_states) { # over parameter values
 # Letter label for this panel
 text(offsetx, Ylim_B*offsety, "e", cex=2, col = "black")
 # Legends & Row titles in left margin -----------------------------
-text(leg_x, Ylim_B, "Varying aw \n(shape of N(w))"
-     , cex=1, col="black", pos=4, xpd=NA)
+text(leg_x, Ylim_B*(leg_y+0.1)*(1+linespacing), bquote('Varying '*italic(a)[w]), cex=1, col="black", pos=4, xpd=NA)
+text(leg_x, Ylim_B*(leg_y+0.1)*(1-linespacing), bquote('(shape of '*italic(N(w))*')'), cex=1, col="black", pos=4, xpd=NA)
 legend(x=leg_x
        , y=Ylim_B*leg_y
        , xpd = NA
@@ -1447,10 +1514,15 @@ legend(x=leg_x
        , bty = 'n'
        , bg= "transparent"
 )
-legend(x=leg_x+0.1
+legend(x=leg_x+0.08
        , y=Ylim_B*leg_y
        , xpd = NA
-       , legend = paste("aw=", aw_list)
+       , legend = c(bquote(italic(a)[w]== .(aw_list[1])),
+                    bquote(italic(a)[w]== .(aw_list[2])),
+                    bquote(italic(a)[w]== .(aw_list[3])),
+                    bquote(italic(a)[w]== .(aw_list[4])),
+                    bquote(italic(a)[w]== .(aw_list[5]))
+       )
        , col = F_colors
        , pch = 19
        , cex = 0.9
@@ -1474,14 +1546,11 @@ box(lwd = 1)
 # Letter label for this panel
 text(xbars*(1-offsetx), 5.5, "f", cex=2, col = "black")
 p_opt_figS3 <- round(p_opt_figS3, 2)
-p_star_vals <- paste("p*=", p_opt_figS3[5], "\n\n"
-                     , "p*=", p_opt_figS3[4], "\n\n"
-                     , "p*=", p_opt_figS3[3], "\n\n"
-                     , "p*=", p_opt_figS3[2], "\n\n"
-                     , "p*=", p_opt_figS3[1], sep = ""
-)
-mtext(text = p_star_vals, 
-      side = 4, line = 1, las=1, cex=0.8, outer=FALSE)
+text(1, 5.5, bquote(italic(p)*'*'== .(p_opt_figS3[5])), cex=1, col="black", pos=4, xpd=NA)
+text(1, 4.2, bquote(italic(p)*'*'== .(p_opt_figS3[4])), cex=1, col="black", pos=4, xpd=NA)
+text(1, 3, bquote(italic(p)*'*'== .(p_opt_figS3[3])), cex=1, col="black", pos=4, xpd=NA)
+text(1, 1.9, bquote(italic(p)*'*'== .(p_opt_figS3[2])), cex=1, col="black", pos=4, xpd=NA)
+text(1, 0.7, bquote(italic(p)*'*'== .(p_opt_figS3[1])), cex=1, col="black", pos=4, xpd=NA)
 
 # ROW 4: B, varying over ac -------------------
 N_figS3 <- array(NaN, c(no_states, resolution_B))
@@ -1515,13 +1584,15 @@ for (i in 1:no_states) { # over parameter values
   )
   abline(v=D_B(p_opt_figS3[i], b), lty = opt_w_lines, lwd=2, col=F_colors[i])
 }
-mtext(text = "Proportion of pollinators\nin patch on crop: D = c/(c+w)", 
-      side = 1, line = 4, las=1, cex=0.8, outer=FALSE)
+mtext(text = "Proportion of pollinators", 
+      side = 1, line = 3, las=1, cex=0.8, outer=FALSE)
+mtext(text = bquote('in patch on crop: '*italic(D)==italic(c)/(italic(c+w))), 
+      side = 1, line = 4.5, las=1, cex=0.8, outer=FALSE)
 # Letter label for this panel
 text(offsetx, Ylim_B*offsety, "g", cex=2, col = "black")
 # Legends in left margin -----------------
-text(leg_x, Ylim_B, "Varying ac \n(shape of N(c))"
-     , cex=1, col="black", pos=4, xpd=NA)
+text(leg_x, Ylim_B*(leg_y+0.1)*(1+linespacing), bquote('Varying '*italic(a)[c]), cex=1, col="black", pos=4, xpd=NA)
+text(leg_x, Ylim_B*(leg_y+0.1)*(1-linespacing), bquote('(shape of '*italic(N(c))*')'), cex=1, col="black", pos=4, xpd=NA)
 legend(x=leg_x
        , y=Ylim_B*leg_y
        , xpd = NA
@@ -1534,10 +1605,15 @@ legend(x=leg_x
        , bty = 'n'
        , bg= "transparent"
 )
-legend(x=leg_x+0.1
+legend(x=leg_x+0.08
        , y=Ylim_B*leg_y
        , xpd = NA
-       , legend = paste("ac=", ac_list)
+       , legend = c(bquote(italic(a)[c]== .(ac_list[1])),
+                    bquote(italic(a)[c]== .(ac_list[2])),
+                    bquote(italic(a)[c]== .(ac_list[3])),
+                    bquote(italic(a)[c]== .(ac_list[4])),
+                    bquote(italic(a)[c]== .(ac_list[5]))
+       )
        , col = F_colors
        , pch = 19
        , cex = 0.9
@@ -1545,10 +1621,24 @@ legend(x=leg_x+0.1
        , bty = 'n'
        , bg= "transparent"
 )
-legend(x=leg_x
-       , y=Ylim_B*0.2
+legend(x=-0.78
+       , y=0-Nlim*0.16
        , xpd = NA
-       , legend = c("N: Total bees \nin patch", "Y: 'yield'\n=ND(1-p)")
+       , legend = c(bquote(italic(N)=='Total bees in patch')
+                    , bquote(italic(F)=='bees on crop'))
+       , col = c(N_colors[3],F_colors[3])
+       , lwd = 2
+       , lty = c(N_lines, F_lines)
+       , cex = 1
+       , bty = 'n'
+       , bg= "transparent"
+)
+
+legend(x=leg_x
+       , y=0-Ylim_B*0.16
+       , xpd = NA
+       , legend = c(bquote(italic(N)=='Total bees in patch')
+                    , bquote(italic(Y)*'= Yield'==italic(ND)*(1-italic(p))))
        , col = c(N_colors[3],F_colors[3])
        , lwd = 2
        , lty = c(N_lines, F_lines)
@@ -1567,19 +1657,18 @@ barplot((1-p_opt_figS3)~b_vector
         , add = TRUE
 )
 box(lwd = 1)
-mtext(text = "Fraction of total area that \nis crop to maximize Y (1-p*)", 
-      side = 1, line = 4, las=1, cex=0.8, outer=FALSE)
+mtext(text = "Fraction of total area that", 
+      side = 1, line = 3, las=1, cex=0.8, outer=FALSE)
+mtext(text = bquote('is crop to maximize '*italic(Y)(1-italic(p)*'*')), 
+      side = 1, line = 4.5, las=1, cex=0.8, outer=FALSE)
 # Letter label for this panel
 text(xbars*(1-offsetx), 5.5, "h", cex=2, col = "black")
 p_opt_figS3 <- round(p_opt_figS3, 2)
-p_star_vals <- paste("p*=", p_opt_figS3[5], "\n\n"
-                     , "p*=", p_opt_figS3[4], "\n\n"
-                     , "p*=", p_opt_figS3[3], "\n\n"
-                     , "p*=", p_opt_figS3[2], "\n\n"
-                     , "p*=", p_opt_figS3[1], sep = ""
-)
-mtext(text = p_star_vals, 
-      side = 4, line = 1, las=1, cex=0.8, outer=FALSE)
+text(1, 5.5, bquote(italic(p)*'*'== .(p_opt_figS3[5])), cex=1, col="black", pos=4, xpd=NA)
+text(1, 4.2, bquote(italic(p)*'*'== .(p_opt_figS3[4])), cex=1, col="black", pos=4, xpd=NA)
+text(1, 3, bquote(italic(p)*'*'== .(p_opt_figS3[3])), cex=1, col="black", pos=4, xpd=NA)
+text(1, 1.9, bquote(italic(p)*'*'== .(p_opt_figS3[2])), cex=1, col="black", pos=4, xpd=NA)
+text(1, 0.7, bquote(italic(p)*'*'== .(p_opt_figS3[1])), cex=1, col="black", pos=4, xpd=NA)
 
 ### END FIG S3 --------------------------
 
@@ -1593,7 +1682,7 @@ mtext(text = p_star_vals,
 # 3 rows: Aw, aw, ac in colors, M and qa, qc for model A.3
 # Figure format ---------------------
 pointsize <- 0.6
-offsetx <- 0.08
+offsetx <- 0.06
 offsety <- 0.9
 point_transparency <- 0.5
 linewidth <- 4
